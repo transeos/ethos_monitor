@@ -18,7 +18,7 @@
 #
 #
 # WARRANTY:
-# Use all material in this file at your own risk. Hiranmoy Basak.
+# Use all material in this file at your own risk. Hiranmoy Basak
 # makes no claims about any material contained in this file.
 #
 # Author: Hiranmoy Basak (hiranmoy.iitkgp@gmail.com)
@@ -36,6 +36,8 @@ from urllib import urlopen
 
 
 gRigName = "-"
+gJsonSite = "-"
+gDebugMode = 0
 gGpuNotHashing = 0
 gLogFile = "/home/ethos/gpu_crash.log"
 
@@ -46,6 +48,7 @@ def DumpActivity(dumpStr):
   print dumpStr
 
   try:
+    # writes input string in a file
     pLogFile = open(gLogFile, "a")
     pLogFile.write("%s @ %s\n" % (dumpStr, str(datetime.datetime.now())))
     pLogFile.close()
@@ -56,7 +59,10 @@ def DumpActivity(dumpStr):
 
 # ============================== process arguments ============================
 def ProcessArguments():
-  global gRigName
+  # arg#0: rig name
+  # arg#1: json site
+  # arg#2: (optional) set debug mode
+  global gRigName, gJsonSite, gDebugMode
 
   argStr = ""
 
@@ -70,38 +76,64 @@ def ProcessArguments():
 
     if (argIdx == 1):
       gRigName = arg
+    elif(argIdx == 2):
+      gJsonSite = arg
+    elif(argIdx == 3):
+      gDebugMode = arg
+      if (str(gDebugMode) == "1"):
+        DumpActivity("debug mode")
+
     else:
       DumpActivity("invalid number of arguments, arg#0: rig name")
 
-  DumpActivity("Rig name: " + gRigName)
+  DumpActivity("Rig name: " + gRigName + ", Json: " + gJsonSite)
 
 
 
 # ===================================   run  ================================
 ProcessArguments()
 
-# sleep for 3 min before checking for crash
-time.sleep(180)
+# sleep for 5 min before checking for crash
+time.sleep(300)
 
 while 1:
-  url = urlopen('http://indian.ethosdistro.com/?json=yes').read()
-  result = json.loads(url)
+  # read site content
+  try:
+    url = urlopen(gJsonSite).read()
+  except:
+     DumpActivity("invalid url")
+     exit(1)
 
-  numGpus = result["rigs"][gRigName]["gpus"]
-  numRunningGpus = result["rigs"][gRigName]["miner_instance"]
+  # convert site content to json
+  try:
+    result = json.loads(url)
+  except:
+     DumpActivity("invalid json")
+     exit(1)
 
-  DumpActivity("Gpus: " + str(numRunningGpus) +"/" + str(numGpus))
+  # extract data
+  try:
+    numGpus = result["rigs"][gRigName]["gpus"]
+    numRunningGpus = result["rigs"][gRigName]["miner_instance"]
+  except:
+     DumpActivity("invalid rig name")
+     exit(1)
 
+  if (str(gDebugMode) == "1"):
+    DumpActivity("Gpus: " + str(numRunningGpus) +"/" + str(numGpus))
 
+  # check if any gpu is down
   if (int(numRunningGpus) != int(numGpus)):
     if (gGpuNotHashing == 1):
       # reboot
       DumpActivity("Rebooting")
       os.system("sudo reboot")
     else:
+      # wait for another 2 min before rebooting
       DumpActivity("One or more Gpu(s) might have crashed")
       gGpuNotHashing = 1
   else:
+    # reset reboot pending counter
     gGpuNotHashing = 0
 
 
