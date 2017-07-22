@@ -22,7 +22,6 @@ sample usage:
 or $ ./miner.py 2e15d2 "http://xyz.ethosdistro.com/?json=yes" 1    (if you want to dump debug info)
 
 
-
 Cronjob setup
 =============
 Open cronjob using "crontab -e" command.
@@ -30,6 +29,11 @@ Add following line at the end -
   @reboot /home/ethos/ethos_monitor/miner.py 2e15d2 "http://xyz.ethosdistro.com/?json=yes"
 
 Now, restart the system. The script will launch autometically at startup.
+
+
+log file
+========
+/home/ethos/gpu_crash.log
 
 
 
