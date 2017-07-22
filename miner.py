@@ -9,17 +9,13 @@
 #
 #                  All Rights Reserved.
 #
-#           THIS WORK CONTAINS TRADE SECRET And
+#                  THIS WORK CONTAINS
 #       PROPRIETARY INFORMATION WHICH Is THE PROPERTY
 #            OF HIRANMOY BASAK OR ITS LICENSOR
 #            AND IS SUBJECT TO LICENSE TERMS.
 #
 #*****************************************************************/
 #
-# No part of this file may be reproduced, stored in a retrieval system,
-# Or transmitted in any form Or by any means --- electronic, mechanical,
-# photocopying, recording, Or otherwise --- without prior written permission
-# of Hiranmoy Basak.
 #
 # WARRANTY:
 # Use all material in this file at your own risk. Hiranmoy Basak.
@@ -84,6 +80,9 @@ def ProcessArguments():
 # ===================================   run  ================================
 ProcessArguments()
 
+# sleep for 3 min before checking for crash
+time.sleep(180)
+
 while 1:
   url = urlopen('http://indian.ethosdistro.com/?json=yes').read()
   result = json.loads(url)
@@ -98,7 +97,7 @@ while 1:
     if (gGpuNotHashing == 1):
       # reboot
       DumpActivity("Rebooting")
-      os.system("r")
+      os.system("sudo reboot")
 
     gGpuNotHashing = 1
 
