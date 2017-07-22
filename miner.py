@@ -93,13 +93,16 @@ while 1:
   DumpActivity("Gpus: " + str(numRunningGpus) +"/" + str(numGpus))
 
 
-  if (numRunningGpus != numGpus):
+  if (int(numRunningGpus) != int(numGpus)):
     if (gGpuNotHashing == 1):
       # reboot
       DumpActivity("Rebooting")
       os.system("sudo reboot")
-
-    gGpuNotHashing = 1
+    else:
+      DumpActivity("One or more Gpu(s) might have crashed")
+      gGpuNotHashing = 1
+  else:
+    gGpuNotHashing = 0
 
 
   # wait for 2 min
