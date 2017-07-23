@@ -102,14 +102,14 @@ while 1:
     url = urlopen(gJsonSite).read()
   except:
      DumpActivity("invalid url")
-     exit(1)
+     continue
 
   # convert site content to json
   try:
     result = json.loads(url)
   except:
      DumpActivity("invalid json")
-     exit(1)
+     continue
 
   # extract data
   try:
@@ -117,7 +117,7 @@ while 1:
     numRunningGpus = result["rigs"][gRigName]["miner_instance"]
   except:
      DumpActivity("invalid rig name")
-     exit(1)
+     continue
 
   if (str(gDebugMode) == "1"):
     DumpActivity("Gpus: " + str(numRunningGpus) +"/" + str(numGpus))

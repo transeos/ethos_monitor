@@ -6,6 +6,12 @@ After 5 mins of boot, it starts checking for gpu crash using json api of ethosdi
 If some gpu(s) doesn't work for 4 min, the system is restarted.
 
 
+setup
+=====
+download: git clone https://github.com/hiranmoy/ethos_monitor
+update: git pull
+
+
 Usage
 =====
 1st argument: rig name shown in ***.ethosdistro.com
