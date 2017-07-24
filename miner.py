@@ -93,10 +93,10 @@ def ProcessArguments():
 # ===================================   run  ================================
 ProcessArguments()
 
-# sleep for 5 min before checking for crash
-time.sleep(300)
-
 while 1:
+  # wait for 4 min
+  time.sleep(240)
+
   # read site content
   try:
     url = urlopen(gJsonSite).read()
@@ -135,7 +135,3 @@ while 1:
   else:
     # reset reboot pending counter
     gGpuNotHashing = 0
-
-
-  # wait for 2 min
-  time.sleep(120)
