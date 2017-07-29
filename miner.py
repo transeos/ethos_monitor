@@ -115,18 +115,19 @@ while 1:
   try:
     numGpus = result["rigs"][gRigName]["gpus"]
     numRunningGpus = result["rigs"][gRigName]["miner_instance"]
+    hashRate =  result["rigs"][gRigName]["miner_hashes"]
   except:
      DumpActivity("invalid rig name")
      continue
 
   if (str(gDebugMode) == "1"):
-    DumpActivity("Gpus: " + str(numRunningGpus) +"/" + str(numGpus))
+    DumpActivity("Gpus: " + str(numRunningGpus) + "/" + str(numGpus) + " - " + str(hashRate))
 
   # check if any gpu is down
   if (int(numRunningGpus) != int(numGpus)):
     if (gGpuNotHashing == 1):
       # reboot
-      DumpActivity("Rebooting")
+      DumpActivity("Rebooting (" + str(hashRate) + ")")
       os.system("sudo reboot")
     else:
       # wait for another 2 min before rebooting
