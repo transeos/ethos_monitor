@@ -8,7 +8,7 @@ If some gpu(s) doesn't work for 4 min, the system is restarted.
 
 setup
 =====
-download: git clone https://github.com/hiranmoy/ethos_monitor
+download: git clone https://github.com/transeos/ethos_monitor
 update: git pull
 
 

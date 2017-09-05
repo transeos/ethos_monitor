@@ -5,23 +5,12 @@
 
 #*****************************************************************
 #
-#              Copyright 2017 Hiranmoy Basak
-#
-#                  All Rights Reserved.
-#
-#                  THIS WORK CONTAINS
-#       PROPRIETARY INFORMATION WHICH Is THE PROPERTY
-#            OF HIRANMOY BASAK OR ITS LICENSOR
-#            AND IS SUBJECT TO LICENSE TERMS.
-#
-#*****************************************************************/
-#
 #
 # WARRANTY:
 # Use all material in this file at your own risk. Hiranmoy Basak
 # makes no claims about any material contained in this file.
 #
-# Author: Hiranmoy Basak (hiranmoy.iitkgp@gmail.com)
+# Contact: hiranmoy.iitkgp@gmail.com
 
 
 
