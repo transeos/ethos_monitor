@@ -48,13 +48,19 @@ def DumpActivity(dumpStr):
 
 
 # ============================== process arguments ============================
-def ProcessArguments():
-  # arg#0: (optional) set debug mode
-  global gDebugMode
+def ProcessArguments(gotPanelInfo):
+  # arg#0: rig name (required if "/var/run/ethos/stats.file" not available)
+  # arg#1: json site (required if "/var/run/ethos/url.file" not available)
+  # "-debug" : (optional) set debug mode
+  global gRigName, gJsonSite, gDebugMode
+
+  if (gotPanelInfo != 1):
+    DumpActivity("Taking rig name and panel url from arguments")
 
   argStr = ""
 
   argIdx = 0
+  argProcessed = 0
   while (1):
     argIdx += 1
     if (argIdx >= len(sys.argv)):
@@ -62,29 +68,48 @@ def ProcessArguments():
 
     arg = sys.argv[argIdx]
 
-    if (argIdx == 1):
-      if (str(arg) == "-debug"):
-        gDebugMode = 1
-        DumpActivity("debug mode")
+    if (str(arg) == "-debug"):
+      gDebugMode = 1
+      DumpActivity("debug mode")
+      continue
 
+    if (gotPanelInfo == 1):
+      DumpActivity("Ignoring argument : " + str(arg))
+      continue
+
+    argProcessed += 1
+    if (argProcessed == 1):
+      gRigName = arg
+    elif(argProcessed == 2):
+      gJsonSite = arg
+  
 
 def GetPanelInfo():
   global gRigName, gJsonSite
 
-  commandOutput1 = commands.getstatusoutput('\grep http /var/run/ethos/url.file')
-  gJsonSite = commandOutput1[1]
+  commandOutput = commands.getstatusoutput('\grep http /var/run/ethos/url.file')
+  if (commandOutput[0] != 0):
+    DumpActivity("/var/run/ethos/url.file is not availble")
+    return 0
+
+  gJsonSite = commandOutput[1]
   gJsonSite = gJsonSite+"/?json=yes"
 
-  commandOutput2 = commands.getstatusoutput("grep hostname /var/run/ethos/stats.file | sed 's/.*://g'")
-  gRigName = commandOutput2[1]
+  commandOutput = commands.getstatusoutput("\grep hostname /var/run/ethos/stats.file")
+  if (commandOutput[0] != 0):
+    DumpActivity("/var/run/ethos/stats.file is not avaible")
+    return 0
 
-  DumpActivity("Rig name: " + gRigName + ", Json: " + gJsonSite)
+  gRigName = commandOutput[1][9:]
+
+  return 1
 
 
 
 # ===================================   run  ================================
-ProcessArguments()
-GetPanelInfo()
+success = GetPanelInfo()
+ProcessArguments(success)
+DumpActivity("Rig name: " + gRigName + ", Json: " + gJsonSite)
 
 while 1:
   # wait for 4 min
