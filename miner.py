@@ -63,8 +63,8 @@ def ProcessArguments():
     arg = sys.argv[argIdx]
 
     if (argIdx == 1):
-      gDebugMode = arg
-      if (str(gDebugMode) == "1"):
+      if (str(arg) == "-debug"):
+        gDebugMode = 1
         DumpActivity("debug mode")
 
 
@@ -94,27 +94,33 @@ while 1:
   try:
     url = urlopen(gJsonSite).read()
   except:
-     DumpActivity("invalid url")
-     continue
+    DumpActivity("invalid url")
+    continue
 
   # convert site content to json
   try:
     result = json.loads(url)
   except:
-     DumpActivity("invalid json")
-     continue
+    DumpActivity("invalid json")
+    continue
 
   # extract data
   try:
     numGpus = result["rigs"][gRigName]["gpus"]
     numRunningGpus = result["rigs"][gRigName]["miner_instance"]
     hashRate =  result["rigs"][gRigName]["miner_hashes"]
+    status = result["rigs"][gRigName]["condition"]
   except:
-     DumpActivity("invalid rig name")
-     continue
+    DumpActivity("invalid rig name")
+    continue
 
   if (str(gDebugMode) == "1"):
-    DumpActivity("Gpus: " + str(numRunningGpus) + "/" + str(numGpus) + " - " + str(hashRate))
+    DumpActivity("<" + status + "> Gpus: " + str(numRunningGpus) + "/" + str(numGpus) + " - " + str(hashRate))
+
+  if (status == "unreachable"):
+    gGpuNotHashing = 0
+    DumpActivity("[Warning] panel is not updating")
+    continue;
 
   # check if any gpu is down
   if (int(numRunningGpus) != int(numGpus)):

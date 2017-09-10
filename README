@@ -14,12 +14,12 @@ update: git pull
 
 Usage
 =====
-Optional argument: If it is set to 1, it dumps running gpu and total gpu number.
+Optional argument: If it is set to "-debug", it dumps running gpu and total gpu number.
 
 
 sample usage:
    $ ./miner.py
-or $ ./miner.py 1    (if you want to dump debug info)
+or $ ./miner.py -debug    (if you want to dump debug info)
 
 
 Cronjob setup
