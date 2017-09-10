@@ -14,25 +14,19 @@ update: git pull
 
 Usage
 =====
-1st argument: rig name shown in ***.ethosdistro.com
-              Example: 2e15d2
-
-2nd argument: json api in ethosdistro site
-              Example: "http://xyz.ethosdistro.com/?json=yes"
-
-3rd argument(optional): If it is set to 1, it dumps running gpu and total gpu number.
+Optional argument: If it is set to 1, it dumps running gpu and total gpu number.
 
 
 sample usage:
-   $ ./miner.py 2e15d2 "http://xyz.ethosdistro.com/?json=yes"
-or $ ./miner.py 2e15d2 "http://xyz.ethosdistro.com/?json=yes" 1    (if you want to dump debug info)
+   $ ./miner.py
+or $ ./miner.py 1    (if you want to dump debug info)
 
 
 Cronjob setup
 =============
 Open cronjob using "crontab -e" command.
 Add following line at the end -
-  @reboot /home/ethos/ethos_monitor/miner.py 2e15d2 "http://xyz.ethosdistro.com/?json=yes"
+  @reboot /home/ethos/ethos_monitor/miner.py
 
 Now, restart the system. The script will launch autometically at startup.
 

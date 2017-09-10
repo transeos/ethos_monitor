@@ -19,6 +19,7 @@ import sys
 import time
 import datetime
 import json
+import commands
 
 from urllib import urlopen
 
@@ -48,10 +49,8 @@ def DumpActivity(dumpStr):
 
 # ============================== process arguments ============================
 def ProcessArguments():
-  # arg#0: rig name
-  # arg#1: json site
-  # arg#2: (optional) set debug mode
-  global gRigName, gJsonSite, gDebugMode
+  # arg#0: (optional) set debug mode
+  global gDebugMode
 
   argStr = ""
 
@@ -64,16 +63,20 @@ def ProcessArguments():
     arg = sys.argv[argIdx]
 
     if (argIdx == 1):
-      gRigName = arg
-    elif(argIdx == 2):
-      gJsonSite = arg
-    elif(argIdx == 3):
       gDebugMode = arg
       if (str(gDebugMode) == "1"):
         DumpActivity("debug mode")
 
-    else:
-      DumpActivity("invalid number of arguments, arg#0: rig name")
+
+def GetPanelInfo():
+  global gRigName, gJsonSite
+
+  commandOutput1 = commands.getstatusoutput('\grep http /var/run/ethos/url.file')
+  gJsonSite = commandOutput1[1]
+  gJsonSite = gJsonSite+"/?json=yes"
+
+  commandOutput2 = commands.getstatusoutput("grep hostname /var/run/ethos/stats.file | sed 's/.*://g'")
+  gRigName = commandOutput2[1]
 
   DumpActivity("Rig name: " + gRigName + ", Json: " + gJsonSite)
 
@@ -81,6 +84,7 @@ def ProcessArguments():
 
 # ===================================   run  ================================
 ProcessArguments()
+GetPanelInfo()
 
 while 1:
   # wait for 4 min
